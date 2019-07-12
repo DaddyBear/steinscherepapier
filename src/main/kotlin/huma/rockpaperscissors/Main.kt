@@ -1,19 +1,25 @@
 package huma.rockpaperscissors
 
-import huma.rockpaperscissors.asciiart.ROCK_PAPER_SCISSOR
+import huma.rockpaperscissors.gameflow.introduction
+import huma.rockpaperscissors.gameflow.output
+import huma.rockpaperscissors.gameflow.playMatch
+import huma.rockpaperscissors.gameflow.stopGame
+import huma.rockpaperscissors.utils.getValueWhenInRangeElseNull
 
 fun main(args: Array<String>) {
-    println("Hello to rock paper scissors on console")
-    println(ROCK_PAPER_SCISSOR)
+    introduction()
 
     val rounds: Int = readUserInputInt(1..100_000, "Please tell me how many rounds do you wanna let play?")
-    println("Okay so we play $rounds rounds")
+    output("Okay so we play $rounds rounds")
+
+    // Let's play
+    playMatch()
 
     // Print result
 
 
     // This is the end
-    println("Good buy")
+    stopGame()
 }
 
 fun readUserInputInt(range: IntRange, question: String): Int {
@@ -21,22 +27,13 @@ fun readUserInputInt(range: IntRange, question: String): Int {
 
     var input: Int? = null
     while (input == null) {
-        println("$question $rangeString")
+        output("$question $rangeString")
         try {
-            input = readLine()!!.toInt().checkRange(range)
+            input = readLine()!!.toInt().getValueWhenInRangeElseNull(range)
         } catch (e: NumberFormatException) {
-            println("Sorry that was not a correct number, please try again.")
+            output("Sorry that was not a correct number, please try again.")
         }
     }
     return input
 }
-
-// Extension function
-fun Int.checkRange(range: IntRange) =
-    if (this in range) {
-        this
-    } else {
-        println("Sorry, your number is not inside the range please try again.")
-        null
-    }
 
