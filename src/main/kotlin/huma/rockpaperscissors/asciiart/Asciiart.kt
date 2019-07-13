@@ -35,18 +35,37 @@ val SCISSORS: String = """
 
 val ROCK_PAPER_SCISSOR = combineMultilineStrings(ROCK, PAPER, SCISSORS)
 
-val SEPARATOR = """
-    |>< >< >< >< >< >< >< >< >< >< >< >< >< >< >< >< >< >< >< ><
+val GREATER = """
+    |            
+    |    __      
+    |    \ \     
+    |     \ \    
+    |     / /    
+    |    /_/     
+    |            
+    |            
 """.trimMargin()
 
-val SHIT = """
-    |      _       _   
-    |     | |   (_) |  
-    |  ___| |__  _| |_ 
-    | / __| '_ \| | __|
-    | \__ \ | | | | |_ 
-    | |___/_| |_|_|\__|
-    |                  
+val LOWER = """
+    |            
+    |      __    
+    |     / /    
+    |    / /     
+    |    \ \     
+    |     \_\    
+    |            
+    |            
+""".trimMargin()
+
+val NULL = """
+    |                
+    |      ____      
+    |     / __ \     
+    |    | |  | |    
+    |    | |__| |    
+    |     \____/     
+    |                
+    |                
 """.trimMargin()
 
 /**
