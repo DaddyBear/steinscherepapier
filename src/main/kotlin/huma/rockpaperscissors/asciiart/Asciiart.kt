@@ -1,6 +1,7 @@
 package huma.rockpaperscissors.asciiart
 
 val ROCK: String = """
+    |                  
     |     _______      
     | ---'   ____)     
     |       (_____)    
@@ -11,6 +12,7 @@ val ROCK: String = """
 """.trimMargin()
 
 val PAPER: String = """
+    |                    
     |     _______        
     | ---'   ____)____   
     |           ______)  
@@ -21,6 +23,7 @@ val PAPER: String = """
 """.trimMargin()
 
 val SCISSORS: String = """
+    |                    
     |     _______        
     | ---'   ____)____   
     |           ______)  
@@ -50,7 +53,7 @@ val SHIT = """
  * Combines various multiline strings in that way that all lines are concatenated one by one with the others.
  * So ascii arts can be displayed side by side.
  *
- * Attention: Please carry on that all given ascii arts have same number of lines else you wouldn't be happy with
+ * Attention: Please take care that all given ascii arts have same number of lines else you wouldn't be happy with
  * the result.
  *
  * Example:

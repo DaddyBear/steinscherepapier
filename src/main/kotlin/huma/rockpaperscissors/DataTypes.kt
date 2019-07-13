@@ -2,17 +2,21 @@ package huma.rockpaperscissors
 
 import kotlin.random.Random
 
+// Data classes
+
+data class GameParameter(val rounds: Int, val player1: Player, val player2: Player)
+
+data class Player(val name: String, val strategy: Strategy = Strategy.RANDOM)
+
+// Enums
+
 enum class Shape {
     ROCK,
     PAPER,
     SCISSORS
 }
 
-private val modulo = Shape.values().size
-
-class Player(name: String, strategy: Strategy = Strategy.RANDOM) {
-
-}
+private val shapeSize = Shape.values().size
 
 enum class Strategy {
     RANDOM,
@@ -26,7 +30,7 @@ enum class Strategy {
             PAPER_ONLY -> Shape.PAPER
             SCISSORS_ONLY -> Shape.SCISSORS
             else -> {
-                Shape.values()[Random.nextInt(0, modulo)]
+                Shape.values()[Random.nextInt(0, shapeSize)]
             }
         }
     }

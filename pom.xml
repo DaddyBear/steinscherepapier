@@ -26,6 +26,8 @@
 
         <!-- Test stuff -->
         <assertj.version>3.12.2</assertj.version>
+        <mockk.version>1.9.3</mockk.version>
+        <junitparams.version>1.1.1</junitparams.version>
     </properties>
 
     <dependencies>
@@ -58,6 +60,17 @@
             <artifactId>assertj-core</artifactId>
             <version>${assertj.version}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.mockk</groupId>
+            <artifactId>mockk</artifactId>
+            <version>${mockk.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>pl.pragmatists</groupId>
+            <artifactId>JUnitParams</artifactId>
+            <version>${junitparams.version}</version>
         </dependency>
     </dependencies>
 
