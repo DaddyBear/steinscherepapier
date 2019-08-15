@@ -79,7 +79,11 @@ class GameflowTest {
         // Given
         val p1Strategy = Strategy.valueOf(p1StrategyString)
         val p2Strategy = Strategy.valueOf(p2StrategyString)
-        val input = "$rounds\n$p1Name\n$inP1StrategyString\n$p2Name\n$inP2StrategyString"
+        val isManualGame = when {
+            rounds > HUMAN_GAME_LIMIT -> ""
+            else -> "N\n"
+        }
+        val input = "$rounds\n$isManualGame$p1Name\n$inP1StrategyString\n$p2Name\n$inP2StrategyString"
         val testSysIn = ByteArrayInputStream(input.toByteArray())
         System.setIn(testSysIn)
 

@@ -8,6 +8,7 @@ import huma.rockpaperscissors.gameflow.stopGame
 
 fun main() {
     introduction()
+
     val params = readGameParameters()
 
     // Let's play

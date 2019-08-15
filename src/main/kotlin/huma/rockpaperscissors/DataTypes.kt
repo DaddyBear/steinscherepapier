@@ -7,9 +7,17 @@ import huma.rockpaperscissors.asciiart.SCISSORS as SCISSORS_SYMBOL
 
 // Data classes
 
-data class GameParameter(val rounds: Int, val player1: Player, val player2: Player)
+data class GameParameter(
+    val rounds: Int,
+    val player1: Player,
+    val player2: Player
+)
 
-data class Player(val name: String, val strategy: Strategy = Strategy.RANDOM) {
+data class Player(
+    val name: String,
+    val strategy: Strategy = Strategy.RANDOM,
+    val isHumanUser: Boolean = false
+) {
 
     /**
      * Select a shape by the players strategy.
@@ -17,7 +25,12 @@ data class Player(val name: String, val strategy: Strategy = Strategy.RANDOM) {
     fun roShamBo() = strategy.select()
 }
 
-data class Match(val round: Int, val player1Shape: Shape, val player2Shape: Shape, val winner: String)
+data class Match(
+    val round: Int,
+    val player1Shape: Shape,
+    val player2Shape: Shape,
+    val winner: String
+)
 
 // Enums
 

@@ -21,6 +21,7 @@ import kotlinx.coroutines.runBlocking
 const val DRAW = "-"
 const val ONE = "one"
 const val TWO = "two"
+const val HUMAN_GAME_LIMIT = 25
 
 fun introduction() {
     output("Hello to rock paper scissors on console")
@@ -28,37 +29,57 @@ fun introduction() {
 }
 
 fun readGameParameters(): GameParameter {
-    val rounds: Int = readUserInputInt(1..100_000, "Please tell me how many rounds do you wanna let play?")
+    val rounds: Int = readUserInputInt(1..10_000, "Please tell me how many rounds do you wanna let play?")
     output("Okay so we play $rounds rounds\n")
 
-    val player1 = readPlayerParameters(ONE)
+    val player1 = readPlayerParameters(ONE, rounds <= HUMAN_GAME_LIMIT)
     val player2 = readPlayerParameters(TWO)
 
     return GameParameter(rounds = rounds, player1 = player1, player2 = player2)
 }
 
-fun readPlayerParameters(player: String): Player {
+fun readPlayerParameters(player: String, isHumanUserPossible: Boolean = false): Player {
+    val isHumanUser = when (isHumanUserPossible) {
+        true -> {
+            val questionManualGame = "Do YOU wanna play a game against the machine? Y = Yes, else No"
+            when (readUserInputString(1..1, questionManualGame)) {
+                "y", "Y" -> true
+                else -> false
+            }
+        }
+        else -> false
+    }
+
     val rangePlayerName = 2..25
-    val questionPlayerName = "Please choose a name for player"
+    val questionPlayerName = "Please choose the name for player"
     val name = readUserInputString(rangePlayerName, "$questionPlayerName $player.")
 
-    val questionPlayerStrategy = """Please select a strategy for player $name.
-        | O = Always Stone
-        | P = Always Paper
-        | X = Always Scissors
-        | Any other input selects a random choice.
-    """.trimMargin()
-    output(questionPlayerStrategy)
+    val strategy = readUserStrategy(name, isHumanUser)
 
-    val strategy = when (readLine()) {
-        "o", "O" -> Strategy.ROCK_ONLY
-        "p", "P" -> Strategy.PAPER_ONLY
-        "x", "X" -> Strategy.SCISSORS_ONLY
-        else -> Strategy.RANDOM
+    return Player(name, strategy, isHumanUser)
+}
+
+fun readUserStrategy(name: String, isHumanUser: Boolean): Strategy {
+    return if (!isHumanUser) {
+        val questionPlayerStrategy = """Please select a strategy for player $name.
+            | O = Always Stone
+            | P = Always Paper
+            | X = Always Scissors
+            | Any other input selects a random choice.
+        """.trimMargin()
+        output(questionPlayerStrategy)
+
+        val strategy = when (readLine()) {
+            "o", "O" -> Strategy.ROCK_ONLY
+            "p", "P" -> Strategy.PAPER_ONLY
+            "x", "X" -> Strategy.SCISSORS_ONLY
+            else -> Strategy.RANDOM
+        }
+        output("All right player $name plays with strategy $strategy.\n")
+        strategy
+    } else {
+        Strategy.RANDOM
     }
-    output("All right player $name plays with strategy $strategy.\n")
-
-    return Player(name, strategy)
 }
 
 fun runMatches(params: GameParameter): MutableList<Match> {
@@ -66,16 +87,17 @@ fun runMatches(params: GameParameter): MutableList<Match> {
     val rounds = params.rounds
     // As more matches to play as less time to wait between
     val delayTime: Long = when {
-        rounds > 1_000 -> 2
-        rounds > 100 -> 44
-        rounds > 20 -> 666
-        else -> 5_000
+        rounds > 1_000 -> 1
+        rounds > 100 -> 22
+        rounds > 20 -> 333
+        else -> 1_000
     }
     runBlocking {
         for (round in 1..rounds) {
             delay(delayTime)
             matches.add(playMatch(round, params))
             output("\n") // Separator
+            delay(delayTime)
         }
     }
     return matches
@@ -83,16 +105,39 @@ fun runMatches(params: GameParameter): MutableList<Match> {
 
 fun playMatch(round: Int, params: GameParameter): Match {
     output("Play round $round")
-    val shapeP1 = params.player1.roShamBo()
-    val shapeP2 = params.player2.roShamBo()
+    val shapeP1 = selectShape(params.player1)
+    val shapeP2 = selectShape(params.player2)
     output("${params.player1.name} choose $shapeP1 and ${params.player2.name} choose $shapeP2.")
     val matchWinner = checkMatchResult(shapeP1, params.player1.name, shapeP2, params.player2.name)
     output(combineMultilineStrings(shapeP1.symbol(), matchWinner.second, shapeP2.symbol()))
     return Match(round = round, player1Shape = shapeP1, player2Shape = shapeP2, winner = matchWinner.first)
 }
 
-fun checkMatchResult(p1Shape: Shape, p1Name: String, p2Shape: Shape, p2Name: String): Pair<String, String> {
-    return when {
+fun selectShape(player: Player): Shape =
+    when (player.isHumanUser) {
+        true -> {
+            val questionShape = """${player.name} select a shape.
+                | O = Always Stone
+                | P = Always Paper
+                | X = Always Scissors
+                | Any other input selects a random choice.
+            """.trimMargin()
+            output(questionShape)
+
+            when (readLine()) {
+                "o", "O" -> ROCK
+                "p", "P" -> PAPER
+                "x", "X" -> SCISSORS
+                else -> player.roShamBo()
+            }
+        }
+        else -> player.roShamBo()
+    }
+
+fun checkMatchResult(
+    p1Shape: Shape, p1Name: String, p2Shape: Shape, p2Name: String
+): Pair<String, String> =
+    when {
         p1Shape == p2Shape -> {
             output("It's a draw")
             Pair(DRAW, NULL)
@@ -109,7 +154,7 @@ fun checkMatchResult(p1Shape: Shape, p1Name: String, p2Shape: Shape, p2Name: Str
             Pair(p2Name, LOWER)
         }
     }
-}
+
 
 fun showResults(params: GameParameter, matchResults: MutableList<Match>) {
     val p1Win = matchResults.count { it.winner == params.player1.name }
