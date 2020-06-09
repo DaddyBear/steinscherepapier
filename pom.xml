@@ -23,7 +23,7 @@
         <kotlin.coroutines.version>1.2.2</kotlin.coroutines.version>
 
         <commons.codec.version>1.12</commons.codec.version>
-        <assembly.version>3.1.1</assembly.version>
+        <assembly.version>3.3.0</assembly.version>
 
         <!-- Test stuff -->
         <assertj.version>3.12.2</assertj.version>
